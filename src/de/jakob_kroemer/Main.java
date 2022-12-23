@@ -11,21 +11,47 @@ import org.apache.spark.api.java.function.Function;
 public class Main {
   public static void main(String[] args) {
 	
-	String logFile = "/home/osboxes/data/dummy.txt"; // Should be some file on your system
-    SparkConf conf = new SparkConf().setMaster("local").setAppName("Simple Application");
-    JavaSparkContext sc = new JavaSparkContext(conf);
-    JavaRDD<String> logData = sc.textFile(logFile).cache();
+	String logFile 				= "./NY-02_short.csv"; // Should be some file on your system
+    SparkConf conf 				= new SparkConf().setMaster("local").setAppName("Simple Application");
+    JavaSparkContext sc 		= new JavaSparkContext(conf);
+    JavaRDD<String> logData 	= sc.textFile(logFile).cache();
+    
+    /**
+    0 	= medallion
+    1 	= hack_license
+    2 	= vendor_id
+    3 	= rate_code
+    4 	= store_and_fwd_flag
+    5 	= pickup_datetime
+    6 	= dropoff_datetime
+    7 	= passenger_count
+    8 	= trip_time_in_secs
+    9 	= trip_distance
+    10 	= pickup_longitude
+   	11 	= pickup_latitude
+    12 	= dropoff_longitude
+   	13 	= dropoff_latitude
+   	14 	= medallion
+    15 	= hack_license
+    16 	= vendor_id
+    17 	= pickup_datetime
+    18 	= payment_type
+    19 	= fare_amount
+    20 	= surcharge
+    21 	= mta_tax
+    22	= tip_amount
+    23 	= tolls_amount
+    24 	= total_amount 
+    */
+    JavaRDD<String[]> splitData = logData.map(new Function<String, String[]>() {
+        public String[] call(String s) { 
+        	String[] array = s.split(","); 
+        	return array;
+        }
+    });
+    
+    //Q3 Q3 = new Q3(logData);
 
-    long numAs = logData.filter(new Function<String, Boolean>() {
-      public Boolean call(String s) { return s.contains("a"); }
-    }).count();
-
-    long numBs = logData.filter(new Function<String, Boolean>() {
-      public Boolean call(String s) { return s.contains("b"); }
-    }).count();
-
-    System.out.println("Lines with a: " + numAs + ", lines with b: " + numBs);
-    JavaRDD<String> lines = sc.parallelize(Arrays.asList("Lines with a: " + numAs + ", lines with b: " + numBs));
-    lines.saveAsTextFile("/home/osboxes/spark_output.txt");
+    System.out.println("Test" + splitData.toString());
   }
 }
