@@ -8,7 +8,7 @@ import org.apache.log4j.Logger;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.function.Function;
 
-public class HelloWorldSpark {
+public class Main {
   public static void main(String[] args) {
 	
 	String logFile = "/home/osboxes/data/dummy.txt"; // Should be some file on your system
