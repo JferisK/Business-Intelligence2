@@ -67,7 +67,12 @@ public class Q6 implements Serializable{
 		}
 		
 		for (int i = 0; i < 24; i++) {
-			System.out.println("Trinkgeld zwischen " + i + "-" + (i+1) + " Uhr: " + results.get(i).mean());
+			System.out.println("Trinkgeld zwischen " 
+								+ i 
+								+ "-" 
+								+ (i+1) 
+								+ " Uhr: " 
+								+ String.format("%.2f$", results.get(i).mean()));
 		}
 	}
 	
