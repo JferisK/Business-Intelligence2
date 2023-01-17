@@ -14,7 +14,7 @@ import org.apache.spark.api.java.function.Function;
 import org.apache.spark.api.java.function.DoubleFunction;
 
 /**
- * @author osboxes
+ * @author jferisk
  *
  */
 public class Q6 implements Serializable{
