@@ -23,11 +23,15 @@ public class Q6 implements Serializable{
 	Ermittle ob und wie das Trinkgeld von der Uhrzeit abhängt.
 	*/
 	public Q6() {
+		System.out.println("Brechne Q6");
+	};
+	
+	public void calcResult() {
 		String logFile 				= "/home/osboxes/eclipse-workspace/Business-Intelligence2/src/NY-02_short.csv"; // Should be some file on your system
 		SparkConf conf 				= new SparkConf().setMaster("local").setAppName("Simple Application");
 		JavaSparkContext sc 		= new JavaSparkContext(conf);
 		JavaRDD<String> logData 	= sc.textFile(logFile).cache();
-      
+	  
 		JavaRDD<String> tipAmount = logData.map(new Function<String, String>() {
 			public String call(String s) { 
 				String[] attributes = s.split(",");
@@ -65,7 +69,7 @@ public class Q6 implements Serializable{
 		for (int i = 0; i < 24; i++) {
 			System.out.println("Trinkgeld zwischen " + i + "-" + (i+1) + " Uhr: " + results.get(i).mean());
 		}
-	};
+	}
 	
 }
 

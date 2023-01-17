@@ -14,5 +14,6 @@ public class Main {
 	public static void main(String[] args) {
 	
 		Q6 Q6 = new Q6();
+		Q6.calcResult();
 	}
 }
