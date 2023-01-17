@@ -12,8 +12,12 @@ import org.apache.spark.api.java.function.Function;
 
 public class Main {
 	public static void main(String[] args) {
-	
+		
+		Q2 Q2 = new Q2();
+		Q2.calcResult();
+		
 		Q6 Q6 = new Q6();
 		Q6.calcResult();
+		
 	}
 }
