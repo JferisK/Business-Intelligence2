@@ -24,7 +24,6 @@ public class Merge {
 	    JavaRDD<String> data1 = sc.textFile(file1).cache();
 	    JavaRDD<String> data2 = sc.textFile(file2).cache();
 	    
-	    System.out.println("hey:"+data1.collect().get(1));
 	    //create pairs with key: passengerNumber values: tipAmount
 	    PairFunction<String, String, String> keyData = 
 	    		new PairFunction<String, String, String>() {
@@ -58,7 +57,7 @@ public class Merge {
 	    	
 	    
 	    JavaRDD<String> output = result.map(flatten);
-	    System.out.println(output.collect().size());
+	   
 	    output.saveAsTextFile("/home/osboxes/data/spark_output_test.csv");
 	    //JavaRDD<String> lines = sc.parallelize(Arrays.asList("Lines with a: " + numAs + ", lines with b: " + numBs));
 	    //lines.saveAsTextFile("/home/osboxes/spark_output.txt");
