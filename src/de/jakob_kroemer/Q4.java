@@ -3,6 +3,8 @@
  */
 package de.jakob_kroemer;
 
+import java.io.Serializable;
+
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
@@ -16,7 +18,17 @@ import scala.Tuple2;
  * @author osboxes
  *
  */
-public class Q4 {
+public class Q4 implements Serializable{
+	
+	JavaRDD<String> logData;
+	
+	public Q4(JavaRDD<String> logData) {
+		this.logData = logData;
+		System.out.println("Brechne Q6");
+	};
+	
+	
+	
 	  public static void main(String[] args) {
 		  
 
