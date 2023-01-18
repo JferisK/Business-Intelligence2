@@ -19,19 +19,17 @@ import org.apache.spark.api.java.function.DoubleFunction;
  */
 public class Q6 implements Serializable{
 	
+	JavaRDD<String> logData;
+	
 	/**
 	Ermittle ob und wie das Trinkgeld von der Uhrzeit abhängt.
 	*/
-	public Q6() {
+	public Q6(JavaRDD<String> logData) {
+		this.logData = logData;
 		System.out.println("Brechne Q6");
 	};
 	
-	public void calcResult() {
-		String logFile 				= "/home/osboxes/eclipse-workspace/Business-Intelligence2/src/NY-02_short.csv"; // Should be some file on your system
-		SparkConf conf 				= new SparkConf().setMaster("local").setAppName("Simple Application");
-		JavaSparkContext sc 		= new JavaSparkContext(conf);
-		JavaRDD<String> logData 	= sc.textFile(logFile).cache();
-	  
+	public void calcResult() {	  
 		JavaRDD<String> tipAmount = logData.map(new Function<String, String>() {
 			public String call(String s) { 
 				String[] attributes = s.split(",");
