@@ -26,5 +26,9 @@ public class Main {
 		
 		A_Noah Q9 = new A_Noah(logData);
 		Q9.calcResult();
+		
+		Q4 Q4 = new Q4(logData);
+		Q4.calcResult();
+		
 	}
 }
