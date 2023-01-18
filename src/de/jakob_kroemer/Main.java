@@ -13,16 +13,18 @@ import org.apache.spark.api.java.function.Function;
 public class Main {
 	public static void main(String[] args) {
 		
-		String logFile = "/home/osboxes/data/NY_medium2_UTF8.csv"; 
+		String logFile = "/home/osboxes/data/Aufgabe2/NY_medium2_UTF8.csv"; 
 		SparkConf conf = new SparkConf().setMaster("local").setAppName("Simple Application");
 		JavaSparkContext sc = new JavaSparkContext(conf);
 		JavaRDD<String> logData = sc.textFile(logFile);
 		
-		Q2 Q2 = new Q2(logFile);
+		Q2 Q2 = new Q2(logData);
 		Q2.calcResult();
 		
-		Q6 Q6 = new Q6(logFile);
+		Q6 Q6 = new Q6(logData);
 		Q6.calcResult();
 		
+		A_Noah Q9 = new A_Noah(logData);
+		Q9.calcResult();
 	}
 }
