@@ -61,32 +61,5 @@ public class A_Noah implements Serializable{
 	    	System.out.println(avgTip.collect().get(i)._1 + " :: " +avgTip.collect().get(i)._2); 
 	    	}
 	    
-		/*
-		 * //group by passengerNumber JavaPairRDD<String, Iterable<String>> pTraveler =
-		 * pairs.groupByKey();
-		 * 
-		 * //count number of fairs passengers Function<Iterable<String>,Integer> count =
-		 * new Function<Iterable<String>,Integer>(){ public Integer
-		 * call(Iterable<String> valuesForKey) { int counter = 0; for(String i :
-		 * valuesForKey)counter++; return counter; } };
-		 * 
-		 * JavaPairRDD<String, Integer> countOfTravelers = pTraveler.mapValues(count);
-		 * for(int i = 0; i < countOfTravelers.collect().size(); ++i) {
-		 * System.out.println(countOfTravelers.collect().get(i)._1 + " :: " +
-		 * countOfTravelers.collect().get(i)._2); }
-		 * 
-		 * //get average of tips per passengerNumber Function<Iterable<String>, Float>
-		 * average = new Function<Iterable<String>, Float>() { public Float
-		 * call(Iterable<String> valuesForKey) { float tips = 0; int counter = 0; for
-		 * (String i : valuesForKey) { tips += Float.parseFloat(i); counter++; } float
-		 * avg = tips/counter; return avg; } };
-		 * 
-		 * JavaPairRDD<String, Float> avgTip = pTraveler.mapValues(average); for(int i =
-		 * 0; i < avgTip.collect().size(); ++i) {
-		 * System.out.println(avgTip.collect().get(i)._1 + " :: " +
-		 * avgTip.collect().get(i)._2); } //JavaRDD<String> lines =
-		 * sc.parallelize(Arrays.asList("Lines with a: " + numAs + ", lines with b: " +
-		 * numBs)); //lines.saveAsTextFile("/home/osboxes/spark_output.txt");
-		 */	
 	    }
 }
