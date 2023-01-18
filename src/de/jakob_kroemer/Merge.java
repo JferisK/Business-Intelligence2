@@ -15,15 +15,26 @@ import org.apache.spark.api.java.function.PairFunction;
 import scala.Tuple2;
 
 public class Merge {
-	public static void main(String[] args) {
+	public static JavaRDD<String> merge(String file1,String file2) {
 		
-		String file1 = "/home/osboxes/data/Aufgabe2/trip_data/trip_data_1.csv"; // Should be some file on your system
-		String file2 = "/home/osboxes/data/Aufgabe2/trip_fare/trip_fare_1.csv";
 	    SparkConf conf = new SparkConf().setMaster("local").setAppName("Simple Application");
 	    JavaSparkContext sc = new JavaSparkContext(conf);
-	    JavaRDD<String> data1 = sc.textFile(file1).cache();
-	    JavaRDD<String> data2 = sc.textFile(file2).cache();
+	    JavaRDD<String> data1 = sc.textFile(file1).mapPartitionsWithIndex((index, iterator) -> {
+            if (index == 0) {
+                iterator.next();
+            }
+            return iterator;
+        }, true).cache();
+	    JavaRDD<String> data2 = sc.textFile(file2).mapPartitionsWithIndex((index, iterator) -> {
+            if (index == 0) {
+                iterator.next();
+            }
+            return iterator;
+        }, true).cache();
 	    
+	   
+	    
+	    //System.out.println("hey:"+data2.collect().get(1));
 	    //create pairs with key: passengerNumber values: tipAmount
 	    PairFunction<String, String, String> keyData = 
 	    		new PairFunction<String, String, String>() {
@@ -31,8 +42,8 @@ public class Merge {
 	    				String[] attributes = s.split(",");
 	    								 //    key			 , 				value
 	    				return new Tuple2(attributes[0]+":"+attributes[1], attributes[2]+","+attributes[3]+","+attributes[4]+","+attributes[5]+","
-	    								 +attributes[6]+","+attributes[7]+","+attributes[8]+","+attributes[9]+","+attributes[10]+","+attributes[11]+
-	    								 ","+attributes[12]+","+attributes[13]);
+	    								 +attributes[6]+","+attributes[7]+","+attributes[8]+","+attributes[9]+","+attributes[10]+","+attributes[11]
+	    										 );//","+attributes[12]+","+attributes[13]
 	    			}
 	    		}; 
 	    PairFunction<String, String, String> keyFare = 
@@ -57,10 +68,7 @@ public class Merge {
 	    	
 	    
 	    JavaRDD<String> output = result.map(flatten);
-	   
-	    output.saveAsTextFile("/home/osboxes/data/spark_output_test.csv");
-	    //JavaRDD<String> lines = sc.parallelize(Arrays.asList("Lines with a: " + numAs + ", lines with b: " + numBs));
-	    //lines.saveAsTextFile("/home/osboxes/spark_output.txt");
+	    return output;
 	  }
 }
 

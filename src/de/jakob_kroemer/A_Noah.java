@@ -25,7 +25,7 @@ public class A_Noah implements Serializable{
 	*/
 	public A_Noah(JavaRDD<String> logData) {
 		this.logData = logData;
-		System.out.println("Brechne Q9");
+		System.out.println("Berechne Q9");
 	}
 	
 	public void calcResult() {
@@ -35,7 +35,7 @@ public class A_Noah implements Serializable{
 	    			public Tuple2<String, String> call(String s) {
 	    				String[] attributes = s.split(",");
 	    								 //    key			 , 				value
-	    				return new Tuple2(attributes[7], attributes[attributes.length-3]);
+	    				return new Tuple2(attributes[6], attributes[attributes.length-3]);
 	    			}
 	    		};        
 	    		
