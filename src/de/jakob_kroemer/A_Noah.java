@@ -30,53 +30,63 @@ public class A_Noah implements Serializable{
 	
 	public void calcResult() {
 		//create pairs with key: passengerNumber values: tipAmount
-	    PairFunction<String, String, String> keyData = 
-	    		new PairFunction<String, String, String>() {
-	    			public Tuple2<String, String> call(String s) {
+	    PairFunction<String, Integer, Double> keyData = 
+	    		new PairFunction<String, Integer, Double>() {
+	    			public Tuple2<Integer, Double> call(String s) {
 	    				String[] attributes = s.split(",");
 	    								 //    key			 , 				value
-	    				return new Tuple2(attributes[6], attributes[attributes.length-3]);
+	    				return new Tuple2(Integer.parseInt(attributes[6]), Double.parseDouble(attributes[attributes.length-3]));
 	    			}
 	    		};        
 	    		
-	    JavaPairRDD<String,String> pairs = logData.mapToPair(keyData);
-	    
-	    //group by passengerNumber
-	    JavaPairRDD<String, Iterable<String>> pTraveler = pairs.groupByKey();
-	    
-	    //count number of fairs passengers
-	    Function<Iterable<String>,Integer> count = new Function<Iterable<String>,Integer>(){
-	    	public Integer call(Iterable<String> valuesForKey) {
-	    		int counter = 0;
-	    		for(String i : valuesForKey)counter++;
-	    		return counter;
+	    JavaPairRDD<Integer,Double> pairs = logData.mapToPair(keyData);
+	    //count each values per key
+	    JavaPairRDD<Integer, Tuple2<Double, Integer>> valueCount = pairs.mapValues(value -> new Tuple2<Double,Integer>(value,1));
+	    for(int i =0; i < valueCount.collect().size(); ++i) {
+	    	System.out.println(valueCount.collect().get(i)._1 + " :: " +valueCount.collect().get(i)._2._2); 
 	    	}
+	    //add values by reduceByKey
+	    JavaPairRDD<Integer, Tuple2<Double, Integer>> reducedCount = valueCount.reduceByKey((tuple1,tuple2) ->  new Tuple2<Double, Integer>(tuple1._1 + tuple2._1, tuple1._2 + tuple2._2));
+	    //calculate average
+	    PairFunction<Tuple2<Integer, Tuple2<Double, Integer>>,Integer,Double> getAverageByKey = (tuple) -> {
+	    	Tuple2<Double, Integer> val = tuple._2;
+	    	double total = val._1;
+	    	double count = val._2;
+	    	Tuple2<Integer, Double> avgTip = new Tuple2<Integer, Double>(tuple._1, total / count);
+	    	return avgTip;
 	    };
+	    JavaPairRDD<Integer, Double> avgTip = reducedCount.mapToPair(getAverageByKey);
 	    
-	    JavaPairRDD<String, Integer> countOfTravelers = pTraveler.mapValues(count);
-		for(int i = 0; i < countOfTravelers.collect().size(); ++i) {
-			System.out.println(countOfTravelers.collect().get(i)._1 + " :: " + countOfTravelers.collect().get(i)._2);
-		}
+	    for(int i =0; i < avgTip.collect().size(); ++i) {
+	    	System.out.println(avgTip.collect().get(i)._1 + " :: " +avgTip.collect().get(i)._2); 
+	    	}
 	    
-		//get average of tips per passengerNumber
-	    Function<Iterable<String>, Float> average = new Function<Iterable<String>, Float>() {
-		      public Float call(Iterable<String> valuesForKey) {
-		    	  float tips = 0;
-		    	  int counter = 0;
-		    	  for (String i : valuesForKey) {
-		    		  tips += Float.parseFloat(i);
-		    		  counter++;
-		    	  }
-		    	  float avg = tips/counter;
-		    	  return avg;
-		    }
-		};
-		
-	    JavaPairRDD<String, Float> avgTip = pTraveler.mapValues(average);
-		for(int i = 0; i < avgTip.collect().size(); ++i) {
-			System.out.println(avgTip.collect().get(i)._1 + " :: " + avgTip.collect().get(i)._2);
-		}	
-	    //JavaRDD<String> lines = sc.parallelize(Arrays.asList("Lines with a: " + numAs + ", lines with b: " + numBs));
-	    //lines.saveAsTextFile("/home/osboxes/spark_output.txt");
-	}
+		/*
+		 * //group by passengerNumber JavaPairRDD<String, Iterable<String>> pTraveler =
+		 * pairs.groupByKey();
+		 * 
+		 * //count number of fairs passengers Function<Iterable<String>,Integer> count =
+		 * new Function<Iterable<String>,Integer>(){ public Integer
+		 * call(Iterable<String> valuesForKey) { int counter = 0; for(String i :
+		 * valuesForKey)counter++; return counter; } };
+		 * 
+		 * JavaPairRDD<String, Integer> countOfTravelers = pTraveler.mapValues(count);
+		 * for(int i = 0; i < countOfTravelers.collect().size(); ++i) {
+		 * System.out.println(countOfTravelers.collect().get(i)._1 + " :: " +
+		 * countOfTravelers.collect().get(i)._2); }
+		 * 
+		 * //get average of tips per passengerNumber Function<Iterable<String>, Float>
+		 * average = new Function<Iterable<String>, Float>() { public Float
+		 * call(Iterable<String> valuesForKey) { float tips = 0; int counter = 0; for
+		 * (String i : valuesForKey) { tips += Float.parseFloat(i); counter++; } float
+		 * avg = tips/counter; return avg; } };
+		 * 
+		 * JavaPairRDD<String, Float> avgTip = pTraveler.mapValues(average); for(int i =
+		 * 0; i < avgTip.collect().size(); ++i) {
+		 * System.out.println(avgTip.collect().get(i)._1 + " :: " +
+		 * avgTip.collect().get(i)._2); } //JavaRDD<String> lines =
+		 * sc.parallelize(Arrays.asList("Lines with a: " + numAs + ", lines with b: " +
+		 * numBs)); //lines.saveAsTextFile("/home/osboxes/spark_output.txt");
+		 */	
+	    }
 }
