@@ -16,7 +16,7 @@ import scala.Tuple2;
 public class Main {
 	public static void main(String[] args) {
 		
-		String user = "Jakob";
+		String user = "Noah";
 		
 		String file1 = "";
 		String file2 = "";
@@ -42,23 +42,23 @@ public class Main {
 		
 		JavaRDD output = Merge.merge(file1,file2);
 		
-//		Q2 Q2 = new Q2(output);
-//		Q2.calcResult();
-//		
-//		Q6 Q6 = new Q6(output);
-//		Q6.calcResult();
+		Q2 Q2 = new Q2(output);
+		Q2.calcResult();
 		
-		Q7 Q7 = new Q7(output);
-		Q7.calcResult();
+		Q6 Q6 = new Q6(output);
+		Q6.calcResult();
 		
 		Q8 Q8 = new Q8(output);
 		Q8.calcResult();
 		
-//		A_Noah Q9 = new A_Noah(output);
-//		Q9.calcResult();
-//		
-//		Q4 Q4 = new Q4(output);
-//		Q4.calcResult();
+		Q7 Q7 = new Q7(output);
+		Q7.calcResult();
+		
+		A_Noah Q9 = new A_Noah(output);
+		Q9.calcResult();
+		
+		Q4 Q4 = new Q4(output);
+		Q4.calcResult();
 		
 	}
 }
