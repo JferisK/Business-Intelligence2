@@ -29,11 +29,20 @@ public class Q6 implements Serializable{
 		System.out.println("Brechne Q6");
 	};
 	
-	public void calcResult() {	  
+	public void calcResult() {	
+//		String logFile = "/home/osboxes/data/trip_fare_1.csv"; // Should be some file on your system
+//	    SparkConf conf = new SparkConf().setMaster("local").setAppName("Simple Application");
+//	    JavaSparkContext sc = new JavaSparkContext(conf);
+//	    logData = sc.textFile(logFile).cache();
+		
+	    int dropoff_datetime = 5;
+	    int tip_amount = 17;
+	    
 		JavaRDD<String> tipAmount = logData.map(new Function<String, String>() {
 			public String call(String s) { 
 				String[] attributes = s.split(",");
-				String total = "\n"+"Zeit:" + attributes[5].substring(11) + "," +  attributes[22];
+				String total = "\n"+"Zeit:" + attributes[5].substring(11) + "," +  attributes[17];
+				//String total = "\n"+"Zeit:" + attributes[3].substring(11) + "," +  attributes[8];
 				return total;
 			}
 		});
@@ -61,17 +70,30 @@ public class Q6 implements Serializable{
 					return (double) x;
 				}
 			});
-			results.add(result);
+			
+			long timeout = 300;
+			System.out.println(number + " beginnt ");
+			System.out.print("Trinkgeld zwischen " 
+					+ i 
+					+ "-" 
+					+ (i+1) 
+					+ " Uhr: " 
+					//+ String.format("%.2f$", result.meanApprox(timeout)));
+					+ result.meanApprox(timeout).getFinalValue());
+			System.out.print(number + " ist feritg");
+			//results.add(result);
 		}
 		
-		for (int i = 0; i < 24; i++) {
-			System.out.println("Trinkgeld zwischen " 
-								+ i 
-								+ "-" 
-								+ (i+1) 
-								+ " Uhr: " 
-								+ String.format("%.2f$", results.get(i).mean()));
-		}
+//		for (int i = 0; i < 24; i++) {
+//			System.out.println("Start: " + new java.util.Date() + " ");
+//			System.out.print("Trinkgeld zwischen " 
+//					+ i 
+//					+ "-" 
+//					+ (i+1) 
+//					+ " Uhr: " 
+//					+ String.format("%.2f$", results.get(i).mean()));
+//		}
+		System.out.print("Done!");
 	}
 	
 }
