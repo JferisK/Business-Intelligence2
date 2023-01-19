@@ -30,7 +30,7 @@ public class Q4 implements Serializable{
     JavaRDD<String> filteredData = logData.filter(new Function<String, Boolean>() {
         public Boolean call(String s) { 
         	String[] attributes = s.split(",");
-        	return attributes[8]=="0"; }
+        	return attributes[7]=="0"; }
       });
 
 	

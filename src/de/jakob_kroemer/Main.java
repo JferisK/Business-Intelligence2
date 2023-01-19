@@ -16,7 +16,7 @@ import scala.Tuple2;
 public class Main {
 	public static void main(String[] args) {
 		
-		String user = "Noah";
+		String user = "Daniel";
 		
 		String file1 = "";
 		String file2 = "";
@@ -31,8 +31,8 @@ public class Main {
 				file2 = "/home/osboxes/data/Aufgabe2/trip_fare/trip_fare_1.csv";
 				break;
 			case "Daniel":
-				file1 = "/home/osboxes/data/Aufgabe2/trip_data/trip_data_1.csv"; // Should be some file on your system
-				file2 = "/home/osboxes/data/Aufgabe2/trip_fare/trip_fare_1.csv";
+				file1 = "/home/osboxes/data/trip_data_1.csv"; // Should be some file on your system
+				file2 = "/home/osboxes/data/trip_fare_1.csv";
 				break;
 			case "Jakob":
 				file1 = "/home/osboxes/data/trip_data_1.csv";
