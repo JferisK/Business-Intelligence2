@@ -40,29 +40,40 @@ public class Merge {
 	    
 	    //System.out.println("hey:"+data2.collect().get(1));
 	    //create pairs with key: passengerNumber values: tipAmount
+		JavaRDD<String> filteredData1 = data1.filter(new Function<String,Boolean>(){
+			public Boolean call(String s) {
+				return s.split(",").length == 14;
+			}
+		});
 		
+		JavaRDD<String> filteredData2 = data2.filter(new Function<String,Boolean>(){
+			public Boolean call(String s) {
+				return s.split(",").length == 11;
+			}
+		});
+	    
 	    PairFunction<String, String, String> keyData = new PairFunction<String,String, String>() { 
 	    	public Tuple2<String, String> call(String s) { 
 	    		String[]attributes = s.split(","); // key , value 
-	    		System.out.println(attributes.toString());
-	    		return new Tuple2(s.split(",")[0]+":"+s.split(",")[1]+":"+s.split(",")[5],s.split(",")[2]+","+s.split(",")[3]+","+s.split(",")[4]+","+s.split(",")[5]+","
-	    				+s.split(",")[6]+","+s.split(",")[7]+","+s.split(",")[8]+","+s.split(",")[9]+","+s.split(",")[10]+","
-	    				+s.split(",")[11]+","+s.split(",")[12]+","+s.split(",")[13]); 
+	    		//System.out.println(Arrays.toString(attributes));
+	    		return new Tuple2(attributes[0]+":"+attributes[1]+":"+attributes[5],attributes[2]+","+attributes[3]+","+attributes[4]+","+attributes[5]+","
+	    				+attributes[6]+","+attributes[7]+","+attributes[8]+","+attributes[9]+","+attributes[10]+","
+	    		+attributes[11]+","+attributes[12]+","+attributes[13]); 
 	    		} 
 	    	};
 	   
 	    PairFunction<String, String, String> keyFare = new PairFunction<String,String, String>() { 
 	    	public Tuple2<String, String> call(String s) { 
-	    		//String[]attributes = s.split(","); // key , value 
-	    		return new Tuple2(s.split(",")[0]+":"+s.split(",")[1]+":"+s.split(",")[3],s.split(",")[2]+","+s.split(",")[3]+","+s.split(",")[4]+","+s.split(",")[5]+","
-	    		+s.split(",")[6]+","+s.split(",")[7]+","+s.split(",")[8]+","+s.split(",")[9]+","+
-	    		s.split(",")[10]);
+	    		String[]attributes = s.split(","); // key , value 
+	    		return new Tuple2(attributes[0]+":"+attributes[1]+":"+attributes[3],attributes[2]+","+attributes[3]+","+attributes[4]+","+attributes[5]+","
+	    		+attributes[6]+","+attributes[7]+","+attributes[8]+","+attributes[9]+","+
+	    		attributes[10]);
 	    	}
 	    };
 		  
 		  
-		  JavaPairRDD<String,String> pairs1 = data1.mapToPair(keyData);
-		  JavaPairRDD<String,String> pairs2 = data2.mapToPair(keyFare);
+		  JavaPairRDD<String,String> pairs1 = filteredData1.mapToPair(keyData);
+		  JavaPairRDD<String,String> pairs2 = filteredData2.mapToPair(keyFare);
 		  JavaPairRDD<String,Tuple2<String, String>> result = pairs1.join(pairs2);
 		  System.out.println(result.count()); 
 		  

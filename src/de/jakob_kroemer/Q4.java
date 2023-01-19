@@ -24,7 +24,7 @@ public class Q4 implements Serializable{
 	
 	public Q4(JavaRDD<String> logData) {
 		this.logData = logData;
-		System.out.println("Brechne Q6");
+		System.out.println("Brechne Q4");
 	};
 	
 	
