@@ -51,7 +51,7 @@ public class Q6 implements Serializable{
     //add values by reduceByKey
     JavaPairRDD<String, Tuple2<Double, Integer>> reducedCount = valueCount.reduceByKey((tuple1,tuple2) ->  new Tuple2<Double, Integer>(tuple1._1 + tuple2._1, tuple1._2 + tuple2._2));
     for(int i =0; i < reducedCount.collect().size(); ++i) {
-	System.out.println(reducedCount.collect().get(i)._1 + " :: " +reducedCount.collect().get(i)._2._2); 
+	System.out.println("Anzahl Daten:"+reducedCount.collect().get(i)._1 + " :: " +reducedCount.collect().get(i)._2._2); 
 	}
     //calculate average
     PairFunction<Tuple2<String, Tuple2<Double, Integer>>,String,Double> getAverageByKey = (tuple) -> {
@@ -63,7 +63,7 @@ public class Q6 implements Serializable{
     };
     JavaPairRDD<String, Double> avgTip = reducedCount.mapToPair(getAverageByKey);
     for(int i =0; i < avgTip.collect().size(); ++i) {
-    	System.out.println(avgTip.collect().get(i)._1 + " :: " +avgTip.collect().get(i)._2); 
+    	System.out.println("Durchschnitt Trinkgeld: "+avgTip.collect().get(i)._1 + " :: " +avgTip.collect().get(i)._2); 
     	}
 		System.out.print("Q6 Done!");
 	}

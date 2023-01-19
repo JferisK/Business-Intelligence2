@@ -31,13 +31,6 @@ public class Q4 implements Serializable{
 	
 	  public void calcResult() {
 		  
-
-		
-//		String logFile = "/home/osboxes/data/NY_medium2_UTF8.csv"; // Should be some file on your system
-//	    SparkConf conf = new SparkConf().setMaster("local").setAppName("Simple Application");
-//	    JavaSparkContext sc = new JavaSparkContext(conf);
-//	    JavaRDD<String> logData = sc.textFile(logFile).cache();
-
 	    PairFunction<String, String, Double> pair = new PairFunction<String, String, Double>() {
 
 	        public Tuple2<String, Double> call(String s) {
