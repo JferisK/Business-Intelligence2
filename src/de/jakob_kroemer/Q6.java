@@ -71,12 +71,16 @@ public class Q6 implements Serializable{
 				}
 			});
 			
-			System.out.println("Trinkgeld zwischen " 
+			long timeout = 300;
+			System.out.println(number + " beginnt ");
+			System.out.print("Trinkgeld zwischen " 
 					+ i 
 					+ "-" 
 					+ (i+1) 
 					+ " Uhr: " 
-					+ String.format("%.2f$", result.mean()));
+					//+ String.format("%.2f$", result.meanApprox(timeout)));
+					+ result.meanApprox(timeout).getFinalValue());
+			System.out.print(number + " ist feritg");
 			//results.add(result);
 		}
 		
