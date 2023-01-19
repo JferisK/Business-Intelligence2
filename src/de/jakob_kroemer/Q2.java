@@ -41,17 +41,17 @@ public class Q2 implements Serializable{
 				}
 			});
 				
-	    long filteredsouth = pickup_lat.filter(new Function <Double, Boolean>(){
+	    long filterednorth = pickup_lat.filter(new Function <Double, Boolean>(){
 	    	public Boolean call(Double i) 
 	    	{return i>40.782005;}}).count(); // 40.782005 Mittelpunkt vom Centralpark
 	    
-	    long filterednorth = pickup_lat.filter(new Function <Double, Boolean>(){
+	    long filteredsouth = pickup_lat.filter(new Function <Double, Boolean>(){
 	    	public Boolean call(Double i) 
 	    	{return i<=40.782005;}}).count();
 	    
 	    
-	    System.out.println(filterednorth + " Fahrten starten im Sueden");
-	    System.out.println(filteredsouth + " Fahrten starten im Norden");
+	    System.out.println(filterednorth + " Fahrten starten im Norden");
+	    System.out.println(filteredsouth + " Fahrten starten im Sueden");
 
 	    System.out.print("Q2 Done!");
 		}
