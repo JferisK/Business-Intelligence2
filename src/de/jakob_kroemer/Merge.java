@@ -24,13 +24,13 @@ public class Merge {
 	    long data2count = sc.textFile(file2).count();
 	    System.out.println(data2count);
 	    JavaRDD<String> data1 = sc.textFile(file1).mapPartitionsWithIndex((index, iterator) -> {
-            if (index == 0 || index == data1count-1) {
+            if (index == 0) {
                 iterator.next();
             }
             return iterator;
         }, true).cache();
 	    JavaRDD<String> data2 = sc.textFile(file2).mapPartitionsWithIndex((index, iterator) -> {
-            if (index == 0 || index == data2count-1 ) {
+            if (index == 0) {
                 iterator.next();
             }
             return iterator;
