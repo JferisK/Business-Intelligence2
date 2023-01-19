@@ -27,7 +27,7 @@ public class Q2 implements Serializable{
 	
 	public Q2(JavaRDD<String> logData) {
 		this.logData = logData;
-		System.out.println("Brechne Q2");
+		System.out.println("Berechne Q2");
 	};
 	
 	
@@ -36,7 +36,7 @@ public class Q2 implements Serializable{
 			
 			public Double call(String s) {
 				String[] attributes = s.split(",");
-				String total = attributes[11];
+				String total = attributes[10];
 				return Double.parseDouble(total);
 				}
 			});
