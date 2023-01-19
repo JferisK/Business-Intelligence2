@@ -38,8 +38,7 @@ public class Merge {
 	    
 	   
 	    
-	    //System.out.println("hey:"+data2.collect().get(1));
-	    //create pairs with key: passengerNumber values: tipAmount
+	    //filter for incorrect lines
 		JavaRDD<String> filteredData1 = data1.filter(new Function<String,Boolean>(){
 			public Boolean call(String s) {
 				return s.split(",").length == 14;
@@ -74,6 +73,10 @@ public class Merge {
 		  
 		  JavaPairRDD<String,String> pairs1 = filteredData1.mapToPair(keyData);
 		  JavaPairRDD<String,String> pairs2 = filteredData2.mapToPair(keyFare);
+		  
+		  //medallion:hack_license:pickup_datetime,vendor_id,rate_code,store_and_fwd_flag,pickup_datetime,dropoff_datetime,passenger_count,
+		  //trip_time_in_secs,trip_distance,pickup_longitude,pickup_latitude,dropoff_longitude,dropoff_latitude,vendor_id,pickup_datetime,
+		  //pickup_datetime,payment_type,fare_amount,surchange,mta_tax,tip_amount,tolls_amount,total_amount
 		  JavaPairRDD<String,Tuple2<String, String>> result = pairs1.join(pairs2);
 		  System.out.println(result.count()); 
 		  
