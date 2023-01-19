@@ -36,32 +36,33 @@ public class Q7 implements Serializable{
 	
 	public void calcResult() {	
 		
-	PairFunction<String, String, Double> pair = new PairFunction<String, String, Double>() {
+	PairFunction<String, Integer, Double> pair = new PairFunction<String, Integer, Double>() {
 
-        public Tuple2<String, Double> call(String s) {
+        public Tuple2<Integer, Double> call(String s) {
 	        String[] attributes = s.split(",");
-	       	return new Tuple2(s.split(",")[7], Double.parseDouble(attributes[attributes.length-3]));               
+	        int minutes = Math.round(Integer.parseInt(attributes[7])/60);
+	       	return new Tuple2(minutes, Double.parseDouble(attributes[attributes.length-3]));               
         }
 	};
 	    	
-    JavaPairRDD<String, Double> pairs = logData.mapToPair(pair);
+    JavaPairRDD<Integer, Double> pairs = logData.mapToPair(pair);
     //count each values per key
-    JavaPairRDD<String, Tuple2<Double, Integer>> valueCount = pairs.mapValues(value -> new Tuple2<Double,Integer>(value,1));
+    JavaPairRDD<Integer, Tuple2<Double, Integer>> valueCount = pairs.mapValues(value -> new Tuple2<Double,Integer>(value,1));
 
     //add values by reduceByKey
-    JavaPairRDD<String, Tuple2<Double, Integer>> reducedCount = valueCount.reduceByKey((tuple1,tuple2) ->  new Tuple2<Double, Integer>(tuple1._1 + tuple2._1, tuple1._2 + tuple2._2));
+    JavaPairRDD<Integer, Tuple2<Double, Integer>> reducedCount = valueCount.reduceByKey((tuple1,tuple2) ->  new Tuple2<Double, Integer>(tuple1._1 + tuple2._1, tuple1._2 + tuple2._2));
     for(int i =0; i < reducedCount.collect().size(); ++i) {
 	System.out.println("Anzahl Daten:"+reducedCount.collect().get(i)._1 + " :: " +reducedCount.collect().get(i)._2._2); 
 	}
     //calculate average
-    PairFunction<Tuple2<String, Tuple2<Double, Integer>>,String,Double> getAverageByKey = (tuple) -> {
+    PairFunction<Tuple2<Integer, Tuple2<Double, Integer>>,Integer,Double> getAverageByKey = (tuple) -> {
     	Tuple2<Double, Integer> val = tuple._2;
     	double total = val._1;
     	double count = val._2;
-    	Tuple2<String, Double> avgTip = new Tuple2<String, Double>(tuple._1, total / count);
+    	Tuple2<Integer, Double> avgTip = new Tuple2<Integer, Double>(tuple._1, total / count);
     	return avgTip;
     };
-    JavaPairRDD<String, Double> avgTip = reducedCount.mapToPair(getAverageByKey);
+    JavaPairRDD<Integer, Double> avgTip = reducedCount.mapToPair(getAverageByKey);
     for(int i =0; i < avgTip.collect().size(); ++i) {
     	System.out.println("Durchschnitt Trinkgeld: "+avgTip.collect().get(i)._1 + " :: " +avgTip.collect().get(i)._2); 
     	}
