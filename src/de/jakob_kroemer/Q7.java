@@ -65,7 +65,7 @@ public class Q7 implements Serializable{
     for(int i =0; i < avgTip.collect().size(); ++i) {
     	System.out.println("Durchschnitt Trinkgeld: "+avgTip.collect().get(i)._1 + " :: " +avgTip.collect().get(i)._2); 
     	}
-		System.out.print("Q6 Done!");
+		System.out.print("Q7 Done!");
 	}
 	
 }
