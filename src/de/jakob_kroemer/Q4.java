@@ -27,7 +27,12 @@ public class Q4 implements Serializable{
 		System.out.println("Berechne Q4");
 	};
 	
-	
+    JavaRDD<String> filteredData = logData.filter(new Function<String, Boolean>() {
+        public Boolean call(String s) { 
+        	String[] attributes = s.split(",");
+        	return attributes[8]=="0"; }
+      });
+
 	
 	  public void calcResult() {
 		  
@@ -43,16 +48,13 @@ public class Q4 implements Serializable{
 
 	                       double hours = seconds / 3600.0;
 	                       
-	                       if(hours==0) {
-	                    	   return new Tuple2(s.split(",")[4].substring(11, 13), 0.0);
-	                       }
 	                       return new Tuple2(s.split(",")[4].substring(11, 13), (miles / hours));
 	                       
 	        }
 
 	};
 	    	
-    JavaPairRDD<String, Double> pairs = logData.mapToPair(pair);
+    JavaPairRDD<String, Double> pairs = filteredData.mapToPair(pair);
     //count each values per key
     JavaPairRDD<String, Tuple2<Double, Integer>> valueCount = pairs.mapValues(value -> new Tuple2<Double,Integer>(value,1));
 
