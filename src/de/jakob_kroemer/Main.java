@@ -16,7 +16,7 @@ import scala.Tuple2;
 public class Main {
 	public static void main(String[] args) {
 		
-		String user = "Daniel";
+		String user = "Jakob";
 		
 		String file1 = "";
 		String file2 = "";
@@ -47,6 +47,12 @@ public class Main {
 		
 		Q6 Q6 = new Q6(output);
 		Q6.calcResult();
+		
+		Q7 Q7 = new Q7(output);
+		Q7.calcResult();
+		
+		Q8 Q8 = new Q8(output);
+		Q8.calcResult();
 		
 		A_Noah Q9 = new A_Noah(output);
 		Q9.calcResult();
