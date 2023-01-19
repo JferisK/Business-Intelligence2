@@ -53,7 +53,7 @@ public class Q2 implements Serializable{
 	    System.out.println(filterednorth + " Fahrten starten im Norden");
 	    System.out.println(filteredsouth + " Fahrten starten im Sueden");
 
-		
+	    System.out.print("Q2 Done!");
 		}
 	}
 

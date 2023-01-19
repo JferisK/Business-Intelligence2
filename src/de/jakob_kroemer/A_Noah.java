@@ -42,12 +42,12 @@ public class A_Noah implements Serializable{
 	    JavaPairRDD<Integer,Double> pairs = logData.mapToPair(keyData);
 	    //count each values per key
 	    JavaPairRDD<Integer, Tuple2<Double, Integer>> valueCount = pairs.mapValues(value -> new Tuple2<Double,Integer>(value,1));
-	    System.out.println(valueCount.count());
-//	    for(int i =0; i < valueCount.collect().size(); ++i) {
-//	    	System.out.println(valueCount.collect().get(i)._1 + " :: " +valueCount.collect().get(i)._2._2); 
-//	    	}
+
 	    //add values by reduceByKey
 	    JavaPairRDD<Integer, Tuple2<Double, Integer>> reducedCount = valueCount.reduceByKey((tuple1,tuple2) ->  new Tuple2<Double, Integer>(tuple1._1 + tuple2._1, tuple1._2 + tuple2._2));
+	    for(int i =0; i < reducedCount.collect().size(); ++i) {
+    	System.out.println(reducedCount.collect().get(i)._1 + " :: " +reducedCount.collect().get(i)._2._2); 
+    	}
 	    //calculate average
 	    PairFunction<Tuple2<Integer, Tuple2<Double, Integer>>,Integer,Double> getAverageByKey = (tuple) -> {
 	    	Tuple2<Double, Integer> val = tuple._2;
@@ -57,10 +57,9 @@ public class A_Noah implements Serializable{
 	    	return avgTip;
 	    };
 	    JavaPairRDD<Integer, Double> avgTip = reducedCount.mapToPair(getAverageByKey);
-	    System.out.println(avgTip.count());
-//	    for(int i =0; i < avgTip.collect().size(); ++i) {
-//	    	System.out.println(avgTip.collect().get(i)._1 + " :: " +avgTip.collect().get(i)._2); 
-//	    	}
-	    
+	    for(int i =0; i < avgTip.collect().size(); ++i) {
+	    	System.out.println(avgTip.collect().get(i)._1 + " :: " +avgTip.collect().get(i)._2); 
+	    	}
+	    System.out.print("Q9 Done!");
 	    }
 }

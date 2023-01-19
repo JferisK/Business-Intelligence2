@@ -33,10 +33,10 @@ public class Q4 implements Serializable{
 		  
 
 		
-		String logFile = "/home/osboxes/data/NY_medium2_UTF8.csv"; // Should be some file on your system
-	    SparkConf conf = new SparkConf().setMaster("local").setAppName("Simple Application");
-	    JavaSparkContext sc = new JavaSparkContext(conf);
-	    JavaRDD<String> logData = sc.textFile(logFile).cache();
+//		String logFile = "/home/osboxes/data/NY_medium2_UTF8.csv"; // Should be some file on your system
+//	    SparkConf conf = new SparkConf().setMaster("local").setAppName("Simple Application");
+//	    JavaSparkContext sc = new JavaSparkContext(conf);
+//	    JavaRDD<String> logData = sc.textFile(logFile).cache();
 
 	    PairFunction<String, String, Double> pair = new PairFunction<String, String, Double>() {
 
@@ -44,43 +44,42 @@ public class Q4 implements Serializable{
 
 	                       String[] attributes = s.split(",");
 
-	                       double seconds = Double.parseDouble(attributes[8]);
+	                       double seconds = Double.parseDouble(attributes[7]);
 
-	                       double miles = Double.parseDouble(attributes[9]);
+	                       double miles = Double.parseDouble(attributes[8]);
 
 	                       double hours = seconds / 3600.0;
 	                       
 	                       if(hours==0) {
-	                    	   return new Tuple2(s.split(",")[5].substring(11, 13), 0.0);
+	                    	   return new Tuple2(s.split(",")[4].substring(11, 13), 0.0);
 	                       }
-	                       return new Tuple2(s.split(",")[5].substring(11, 13), (miles / hours));
+	                       return new Tuple2(s.split(",")[4].substring(11, 13), (miles / hours));
 	                       
 	        }
 
 	};
 	    	
-		JavaPairRDD<String, Double> pairs = logData.mapToPair(pair);
-	    
-		//group by hour
-		
-		JavaPairRDD<String, Iterable<Double>> hours = pairs.groupByKey();
-		
-		Function<Iterable<Double>,Double> average = new Function <Iterable<Double>, Double>(){
-			public Double call(Iterable<Double> valuesForKey) {
-				double speed=0;
-				int counter=0;
-				for(double i : valuesForKey) {
-					speed += i;
-					counter++;
-				}
-				double avg = speed/counter;
-				return avg;
-			}
-		};
-		
-		JavaPairRDD<String, Double> avgSpeed = hours.mapValues(average);
-			for(int i=0; i< avgSpeed.collect().size(); i++) {
-				System.out.println(avgSpeed.collect().get(i)._1+"::"+avgSpeed.collect().get(i)._2);
-			}
+    JavaPairRDD<String, Double> pairs = logData.mapToPair(pair);
+    //count each values per key
+    JavaPairRDD<String, Tuple2<Double, Integer>> valueCount = pairs.mapValues(value -> new Tuple2<Double,Integer>(value,1));
+
+    //add values by reduceByKey
+    JavaPairRDD<String, Tuple2<Double, Integer>> reducedCount = valueCount.reduceByKey((tuple1,tuple2) ->  new Tuple2<Double, Integer>(tuple1._1 + tuple2._1, tuple1._2 + tuple2._2));
+    for(int i =0; i < reducedCount.collect().size(); ++i) {
+	System.out.println(reducedCount.collect().get(i)._1 + " :: " +reducedCount.collect().get(i)._2._2); 
+	}
+    //calculate average
+    PairFunction<Tuple2<String, Tuple2<Double, Integer>>,String,Double> getAverageByKey = (tuple) -> {
+    	Tuple2<Double, Integer> val = tuple._2;
+    	double total = val._1;
+    	double count = val._2;
+    	Tuple2<String, Double> avgTip = new Tuple2<String, Double>(tuple._1, total / count);
+    	return avgTip;
+    };
+    JavaPairRDD<String, Double> avgTip = reducedCount.mapToPair(getAverageByKey);
+    for(int i =0; i < avgTip.collect().size(); ++i) {
+    	System.out.println(avgTip.collect().get(i)._1 + " :: " +avgTip.collect().get(i)._2); 
+    	}
+    System.out.print("Q4 Done!");
 	  }
 	}
