@@ -31,7 +31,7 @@ public class Q7 implements Serializable{
 	*/
 	public Q7(JavaRDD<String> logData) {
 		this.logData = logData;
-		System.out.println("Berechne Q8");
+		System.out.println("Berechne Q7");
 	};
 	
 	public void calcResult() {	
@@ -40,8 +40,13 @@ public class Q7 implements Serializable{
 
         public Tuple2<Long, Double> call(String s) {
 	        String[] attributes = s.split(",");
-	        long distance =  Math.round(Integer.parseInt(attributes[8])/10.0) * 10;
-	       	return new Tuple2(distance, Double.parseDouble(attributes[attributes.length-3]));               
+	        String distance = attributes[8];
+	        if(distance.charAt(0)=='.') {
+	        	distance = "0"+distance;
+	        }
+	        
+	        long distanceRounded =  Math.round(Double.parseDouble(distance)/10)*10;
+	       	return new Tuple2(distanceRounded, Double.parseDouble(attributes[attributes.length-3]));               
         }
 	};
 	    	
@@ -66,7 +71,7 @@ public class Q7 implements Serializable{
     for(int i =0; i < avgTip.collect().size(); ++i) {
     	System.out.println("Durchschnitt Trinkgeld: "+avgTip.collect().get(i)._1 + " :: " +avgTip.collect().get(i)._2); 
     	}
-		System.out.print("Q8 Done!");
+		System.out.print("Q7 Done!");
 	}
 	
 }

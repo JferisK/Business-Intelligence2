@@ -64,7 +64,7 @@ public class Merge {
 	    PairFunction<String, String, String> keyFare = new PairFunction<String,String, String>() { 
 	    	public Tuple2<String, String> call(String s) { 
 	    		String[]attributes = s.split(","); // key , value 
-	    		return new Tuple2(attributes[0]+":"+attributes[1]+":"+attributes[3],attributes[2]+","+attributes[3]+","+attributes[4]+","+attributes[5]+","
+	    		return new Tuple2(attributes[0]+":"+attributes[1]+":"+attributes[3],attributes[4]+","+attributes[5]+","
 	    		+attributes[6]+","+attributes[7]+","+attributes[8]+","+attributes[9]+","+
 	    		attributes[10]);
 	    	}
@@ -75,8 +75,8 @@ public class Merge {
 		  JavaPairRDD<String,String> pairs2 = filteredData2.mapToPair(keyFare);
 		  
 		  //medallion:hack_license:pickup_datetime,vendor_id,rate_code,store_and_fwd_flag,pickup_datetime,dropoff_datetime,passenger_count,
-		  //trip_time_in_secs,trip_distance,pickup_longitude,pickup_latitude,dropoff_longitude,dropoff_latitude,vendor_id,pickup_datetime,
-		  //pickup_datetime,payment_type,fare_amount,surchange,mta_tax,tip_amount,tolls_amount,total_amount
+		  //trip_time_in_secs,trip_distance,pickup_longitude,pickup_latitude,dropoff_longitude,dropoff_latitude
+		  //,payment_type,fare_amount,surchange,mta_tax,tip_amount,tolls_amount,total_amount
 		  JavaPairRDD<String,Tuple2<String, String>> result = pairs1.join(pairs2);
 		  System.out.println(result.count()); 
 		  
