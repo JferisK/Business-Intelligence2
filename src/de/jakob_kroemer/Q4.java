@@ -27,15 +27,19 @@ public class Q4 implements Serializable{
 		System.out.println("Berechne Q4");
 	};
 	
-    JavaRDD<String> filteredData = logData.filter(new Function<String, Boolean>() {
-        public Boolean call(String s) { 
-        	String[] attributes = s.split(",");
-        	return attributes[7]=="0"; }
-      });
 
 	
 	  public void calcResult() {
 		  
+			// filtering data where seconds==0
+		    JavaRDD<String> filteredData = logData.filter(new Function<String, Boolean>() {
+		        public Boolean call(String s) { 
+		        	String[] attributes = s.split(",");
+		        	return attributes[7]!="0"; }
+		      });
+
+		  
+		  // creating a pair from trip_start seconds as a key and trip_distance/trip_time (also known as speed :) ) as value
 	    PairFunction<String, String, Double> pair = new PairFunction<String, String, Double>() {
 
 	        public Tuple2<String, Double> call(String s) {
@@ -55,6 +59,7 @@ public class Q4 implements Serializable{
 	};
 	    	
     JavaPairRDD<String, Double> pairs = filteredData.mapToPair(pair);
+    
     //count each values per key
     JavaPairRDD<String, Tuple2<Double, Integer>> valueCount = pairs.mapValues(value -> new Tuple2<Double,Integer>(value,1));
 
@@ -63,6 +68,7 @@ public class Q4 implements Serializable{
     for(int i =0; i < reducedCount.collect().size(); ++i) {
 	System.out.println(reducedCount.collect().get(i)._1 + " :: " +reducedCount.collect().get(i)._2._2); 
 	}
+    
     //calculate average
     PairFunction<Tuple2<String, Tuple2<Double, Integer>>,String,Double> getAverageByKey = (tuple) -> {
     	Tuple2<Double, Integer> val = tuple._2;
