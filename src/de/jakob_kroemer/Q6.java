@@ -26,7 +26,7 @@ public class Q6 implements Serializable{
 	*/
 	public Q6(JavaRDD<String> logData) {
 		this.logData = logData;
-		System.out.println("Brechne Q6");
+		System.out.println("Berechne Q6");
 	};
 	
 	public void calcResult() {	
