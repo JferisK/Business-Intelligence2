@@ -23,6 +23,10 @@ import org.apache.spark.api.java.function.FlatMapFunction;
 
 public class Q2 implements Serializable{ 
 	
+	/**
+	Ermittle wo mehr Fahrten beginnen
+	*/
+	
 	JavaRDD<String> logData;
 	
 	public Q2(JavaRDD<String> logData) {
@@ -32,28 +36,31 @@ public class Q2 implements Serializable{
 	
 	
 	public void calcResult() {
+		
+		//get pickup_lat and parse to double
 		JavaRDD<Double> pickup_lat = logData.map(new Function<String, Double>() {
-			
 			public Double call(String s) {
 				String[] attributes = s.split(",");
 				String total = attributes[10];
 				return Double.parseDouble(total);
 				}
 			});
-				
+		
+		//filter every pickup_lat in north
 	    long filterednorth = pickup_lat.filter(new Function <Double, Boolean>(){
 	    	public Boolean call(Double i) 
 	    	{return i>40.782005;}}).count(); // 40.782005 Mittelpunkt vom Centralpark
 	    
+	    //filter every pickup_lat in south
 	    long filteredsouth = pickup_lat.filter(new Function <Double, Boolean>(){
 	    	public Boolean call(Double i) 
 	    	{return i<=40.782005;}}).count();
 	    
-	    
+	  
 	    System.out.println(filterednorth + " Fahrten starten im Norden");
 	    System.out.println(filteredsouth + " Fahrten starten im Sueden");
 
 	    System.out.print("Q2 Done!");
-		}
 	}
+}
 

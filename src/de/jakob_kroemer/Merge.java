@@ -15,20 +15,26 @@ import org.apache.spark.api.java.function.PairFunction;
 import scala.Tuple2;
 
 public class Merge {
+	
 	public static JavaRDD<String> merge(String file1,String file2) {
 		
 	    SparkConf conf = new SparkConf().setMaster("local").setAppName("Simple Application");
 	    JavaSparkContext sc = new JavaSparkContext(conf);
+	    
+	    //count rows of inputs
 	    long data1count = sc.textFile(file1).count();
-	    System.out.println(data1count);
+	    System.out.println("Rows file 1: "+data1count);
 	    long data2count = sc.textFile(file2).count();
-	    System.out.println(data2count);
+	    System.out.println("Rows file 2: "+data2count);
+	    
+	    //read data and cut header
 	    JavaRDD<String> data1 = sc.textFile(file1).mapPartitionsWithIndex((index, iterator) -> {
             if (index == 0) {
                 iterator.next();
             }
             return iterator;
         }, true).cache();
+	    
 	    JavaRDD<String> data2 = sc.textFile(file2).mapPartitionsWithIndex((index, iterator) -> {
             if (index == 0) {
                 iterator.next();
@@ -51,22 +57,24 @@ public class Merge {
 			}
 		});
 	    
+		
 	    PairFunction<String, String, String> keyData = new PairFunction<String,String, String>() { 
 	    	public Tuple2<String, String> call(String s) { 
-	    		String[]attributes = s.split(","); // key , value 
-	    		//System.out.println(Arrays.toString(attributes));
+	    		String[]attributes = s.split(",");
+	  
 	    		return new Tuple2(attributes[0]+":"+attributes[1]+":"+attributes[5],attributes[2]+","+attributes[3]+","+attributes[4]+","+attributes[5]+","
 	    				+attributes[6]+","+attributes[7]+","+attributes[8]+","+attributes[9]+","+attributes[10]+","
-	    		+attributes[11]+","+attributes[12]+","+attributes[13]); 
-	    		} 
-	    	};
+	    				+attributes[11]+","+attributes[12]+","+attributes[13]); 
+	    	} 
+	    };
 	   
 	    PairFunction<String, String, String> keyFare = new PairFunction<String,String, String>() { 
 	    	public Tuple2<String, String> call(String s) { 
-	    		String[]attributes = s.split(","); // key , value 
+	    		String[]attributes = s.split(",");
+	    		
 	    		return new Tuple2(attributes[0]+":"+attributes[1]+":"+attributes[3],attributes[4]+","+attributes[5]+","
-	    		+attributes[6]+","+attributes[7]+","+attributes[8]+","+attributes[9]+","+
-	    		attributes[10]);
+	    				+attributes[6]+","+attributes[7]+","+attributes[8]+","+attributes[9]+","+
+	    				attributes[10]);
 	    	}
 	    };
 		  
@@ -78,17 +86,21 @@ public class Merge {
 		  //trip_time_in_secs,trip_distance,pickup_longitude,pickup_latitude,dropoff_longitude,dropoff_latitude
 		  //,payment_type,fare_amount,surchange,mta_tax,tip_amount,tolls_amount,total_amount
 		  JavaPairRDD<String,Tuple2<String, String>> result = pairs1.join(pairs2);
-		  System.out.println(result.count()); 
 		  
+		  //print count of correct datasets
+		  System.out.println("CorrectData: "+result.count()); 
+		  
+		  //create one String to return
 		  Function flatten = new Function<Tuple2<String,Tuple2<String,String>>,String>(){ 
 			  public String call(Tuple2<String,Tuple2<String,String>> a) { 
-				  return (a._1+","+a._2._1+","+a._2._2);} };
+				  return (a._1+","+a._2._1+","+a._2._2);
+			  } 
+		  };
 		  
 		  
 		  JavaRDD<String> output = result.map(flatten);
 		 
-	    
-	    return output;
+		  return output;
 	  }
 }
 

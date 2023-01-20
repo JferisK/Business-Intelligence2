@@ -45,20 +45,20 @@ public class Main {
 		Q2 Q2 = new Q2(output);
 		Q2.calcResult();
 		
+		Q4 Q4 = new Q4(output);
+		Q4.calcResult();
+		
 		Q6 Q6 = new Q6(output);
 		Q6.calcResult();
-		
-		Q8 Q8 = new Q8(output);
-		Q8.calcResult();
 		
 		Q7 Q7 = new Q7(output);
 		Q7.calcResult();
 		
+		Q8 Q8 = new Q8(output);
+		Q8.calcResult();
+		
 		A_Noah Q9 = new A_Noah(output);
 		Q9.calcResult();
-		
-		Q4 Q4 = new Q4(output);
-		Q4.calcResult();
 		
 	}
 }
